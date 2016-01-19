@@ -14,9 +14,16 @@ class AppTest {
 
     JobTest[App]
       .arg(eventInputPathArg, eventInputPathArg)
-      .arg(outputArg, outputArg)
+      .arg(outputEventArg, outputEventArg)
+      .arg(outputUserArg, outputUserArg)
       .source(Csv(eventInputPathArg), eventsInput)
-      .sink[(String, String, String)](Csv(outputArg)) {
+      .sink[(String, String, String)](Csv(outputEventArg)) {
+      op =>
+        val results = op.toList
+        results.foreach(println)
+        assert(results.size > 0)
+    }
+      .sink[(String, String, String)](Csv(outputUserArg)) {
       op =>
         val results = op.toList
         results.foreach(println)
