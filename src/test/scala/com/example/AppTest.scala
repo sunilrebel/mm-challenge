@@ -21,7 +21,7 @@ class AppTest {
       .sink[(String)](Csv(outputArg)) {
       op =>
         val results = op.toList
-        results.foreach(println)
+        println(results)
         assert(results.size > 0)
     }
       .run
