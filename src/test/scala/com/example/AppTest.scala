@@ -1,6 +1,6 @@
 package com.example
 
-import com.twitter.scalding.{Csv, JobTest}
+import com.twitter.scalding.{TextLine, Csv, JobTest}
 import org.testng.annotations.Test
 import App._
 
@@ -9,10 +9,8 @@ class AppTest {
   @Test(groups = Array("job"))
   def testApp() = {
 
-    val eventsInput = List(
-      ("1450501231", "325f8cc6-c4ae-42ad-895f-09fd231a8d79", "2", "7fe40811-7d3b-42b9-83ff-58eee06859d9", "purchase"),
-      ("1450501449", "253ea62f-0fd2-4b54-bb9b-238df34ff2f5", "1", "6507f07f-be06-4355-9067-ab7dcba6a895", "click")
-    )
+    val eventsInput = getEventData("/Users/tkmabvj/sunil/projects/mm-challenge/src/test/resources/events.csv")
+    val impressionInput = getImpressionData("/Users/tkmabvj/sunil/projects/mm-challenge/src/test/resources/impressions.csv")
 
     JobTest[App]
       .arg(eventInputPathArg, eventInputPathArg)
@@ -21,10 +19,26 @@ class AppTest {
       .sink[(String)](Csv(outputArg)) {
       op =>
         val results = op.toList
-        println(results)
+        results.foreach(println)
         assert(results.size > 0)
     }
       .run
       .finish
+  }
+
+  def getEventData(filepath: String) = {
+    scala.io.Source.fromFile(filepath).getLines().filter(!_.isEmpty).map {
+      line =>
+        val parts = line.split(",")
+        (parts(0), parts(1), parts(2), parts(3), parts(4))
+    }.toList
+  }
+
+  def getImpressionData(filepath: String) = {
+    scala.io.Source.fromFile(filepath).getLines().filter(!_.isEmpty).map {
+      line =>
+        val parts = line.split(",")
+        (parts(0), parts(1), parts(2), parts(3))
+    }.toList
   }
 }
