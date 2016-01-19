@@ -16,7 +16,7 @@ class AppTest {
       .arg(eventInputPathArg, eventInputPathArg)
       .arg(outputArg, outputArg)
       .source(Csv(eventInputPathArg), eventsInput)
-      .sink[(String)](Csv(outputArg)) {
+      .sink[(String, String, String)](Csv(outputArg)) {
       op =>
         val results = op.toList
         results.foreach(println)

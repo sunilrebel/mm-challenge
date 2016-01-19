@@ -10,7 +10,11 @@ class App(args: Args) extends Job(args) {
 
   val eventSource = Csv(eventInputPath, fields = Event.schema).read
   eventSource
-    .project(Event.timestamp)
+    .groupBy(Event.advertiser_id, Event.event_type) {
+    group =>
+      group.size
+  }
+    .project(Event.advertiser_id, Event.event_type, 'size)
     .write(Csv(outputPath))
 }
 
