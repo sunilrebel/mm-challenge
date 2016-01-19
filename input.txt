@@ -1,0 +1,2 @@
+This is a happy day. A day to remember
+java -cp target/learning-scalding-1.0.0-jar-with-dependencies.jar com.twitter.scalding.Tool in.spann.learning.WordCountJob --local --input input.txt --output output.txt -Xmx1024m
